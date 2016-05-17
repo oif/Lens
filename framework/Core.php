@@ -58,14 +58,11 @@ class Lens {
 
     // 设置 DEBUG 模式
     function setReporting() {
+        error_reporting(E_ALL);
         if (APP_DEBUG == true) {
-            error_reporting(E_ALL); // 所有报错信息
             ini_set('display_errors','On');
         } else {
-            error_reporting(E_ALL);
             ini_set('display_errors','Off');    // 不报错
-            ini_set('log_errors', 'On');    // 输出日志
-            ini_set('error_log', RUNTIME_PATH. 'logs/error.log');   // 日志输出位置
         }
     }
 
