@@ -1,12 +1,16 @@
 <?php
+
 /**
  * Lens 核心框架
  */
 class Lens {
 
+    private $route;
+
     // 运行程序
     function run() {
         spl_autoload_register(array($this, 'loadClass'));
+        $this->setRoutes();
         $this->setReporting();
         $this->removeMagicQuotes();
         $this->unregisterGlobals();
@@ -19,13 +23,12 @@ class Lens {
             $url = $_SERVER['REQUEST_URI'];
             $urlArray = explode("/",$url);
 
-            // 获取控制器名
-            $controllerName = ucfirst(empty($urlArray[0]) ? 'Index' : $urlArray[0]);
-            $controller = $controllerName . 'Controller';
-
-            // 获取动作名
-            array_shift($urlArray);
-            $action = empty($urlArray[0]) ? 'index' : $urlArray[0];
+            $target = $this->route->find($url);
+            if ($target) {
+                $target = explode("@", $target);
+            }
+            $controller = empty($target[0]) ? 'IndexController' : $target[0];
+            $action = empty($target[1]) ? 'index' : $target[1];
 
             //获取URL参数
             array_shift($urlArray);
@@ -37,14 +40,19 @@ class Lens {
         $queryString  = empty($queryString) ? array() : $queryString;
 
         // 实例化控制器
-        $int = new $controller($controllerName, $action);
+        $int = new $controller();
 
         // 如果控制器存和动作存在，这调用并传入URL参数
         if ((int)method_exists($controller, $action)) {
             call_user_func_array(array($int, $action), $queryString);
-        } else {
-            exit("不存在 $controller");
         }
+    }
+
+    function setRoutes() {
+        $this->route = new Route;
+        $this->route->set('/user/register', 'UserController@register');
+        $this->route->set('/user/login', 'UserController@login');
+        $this->route->set('/user/info', 'UserController@info');
     }
 
 

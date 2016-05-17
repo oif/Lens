@@ -6,27 +6,17 @@ class SQL {
 
     /** 连接数据库 **/
     function connect($host, $user, $pwd, $db) {
-        $this->_dbHandle = @mysql_connect($host, $user, $pwd);
-        if ($this->_dbHandle != 0) {
-            if (mysql_select_db($db, $this->_dbHandle)) {
-                return 1;
-            }
-            else {
-                return 0;
-            }
-        }
-        else {
+        $this->_dbHandle = new MySQLi($host, $user, $pwd, $db);
+        if($this->_dbHandle->connect_errno)
+        {
             return 0;
         }
+        return 1;
     }
 
     /** 从数据库断开 **/
     function disconnect() {
-        if (@mysql_close($this->_dbHandle) != 0) {
-            return 1;
-        }  else {
-            return 0;
-        }
+        mysqli_close($this->_dbHandle);
     }
 
     /** 查询所有 **/
@@ -49,49 +39,16 @@ class SQL {
 
     /** 自定义SQL查询 **/
     function query($query, $singleResult = 0) {
-
-        $this->_result = mysql_query($query, $this->_dbHandle);
-
+        $this->_result = $this->_dbHandle->query($query);
         if (preg_match("/select/i",$query)) {
-            $result = array();
-            $table = array();
-            $field = array();
-            $tempResults = array();
-            $numOfFields = mysql_num_fields($this->_result);
-            for ($i = 0; $i < $numOfFields; ++$i) {
-                array_push($table,mysql_fieldtable($this->_result, $i));
-                array_push($field,mysql_field_name($this->_result, $i));
-            }
-
-            while ($row = mysql_fetch_row($this->_result)) {
-                for ($i = 0;$i < $numOfFields; ++$i) {
-                    $table[$i] = ucfirst($table[$i]);
-                    $tempResults[$table[$i]][$field[$i]] = $row[$i];
-                }
-                if ($singleResult == 1) {
-                    mysql_free_result($this->_result);
-                    return $tempResults;
-                }
-                array_push($result,$tempResults);
-            }
-            mysql_free_result($this->_result);
-            return($result);
+            return $this->_result->fetch_array();
         }
-    }
-
-    /** 获取记录数 **/
-    function getNumRows() {
-        return mysql_num_rows($this->_result);
-    }
-
-    /** 释放查询资源 **/
-    function freeResult() {
-        mysql_free_result($this->_result);
+        return $this->_result;
     }
 
     /** 获取错误信息 **/
     function getError() {
-        return mysql_error($this->_dbHandle);
+        return mysqli_error($this->_dbHandle);
     }
 
 }

@@ -1,5 +1,5 @@
 # Lens
-A light weight PHP framework, start at the moment of the audition of Meitu Corp.
+超轻量的 PHP MVC 框架
 
 
 

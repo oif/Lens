@@ -13,8 +13,12 @@ class View {
         $this->properties[$property] = $value;
     }
 
-    function render($view = 'api') { // 输出
+    function render($view) { // 输出
         extract($this->properties);
+        if (is_null($view)) {
+            $view = 'api';
+            $res = 'Empty';
+        }
         include (APP_PATH . "app/view/$view.php");  // 自定义视图
     }
 
