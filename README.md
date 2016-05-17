@@ -1,5 +1,7 @@
 # Lens
 
+
+
 ## 框架目录结构
 
 - app
@@ -30,12 +32,15 @@
 
 ### Users
 
-- id: 用户ID 自增、主键
-- name: 用户名 唯一
-- password: 用户密码
-- avatar: 用户头像
-- token: API 认证 token
-- expire: token 过期时间
+| 键名       | 类型           | 约束    | 描述           |
+| -------- | ------------ | ----- | ------------ |
+| id       | int(11)      | 主键、自增 | 用户 ID        |
+| name     | varchar(10)  | 唯一、非空 | 用户名，作为登录使用   |
+| password | varchar(18)  | 非空    | 用户密码         |
+| avatar   | varchar(255) | 非空    | 用户头像，URL地址   |
+| token    | varchar(128) | 非空    | 用户标识，每次登录会更新 |
+| expire   | int(11)      |       | token有效期     |
+
 
 
 ## 路由
