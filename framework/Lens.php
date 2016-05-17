@@ -7,16 +7,15 @@ defined('APP_DEBUG') or define('APP_DEBUG', false);
 defined('CONFIG_PATH') or define('CONFIG_PATH', APP_PATH.'config/');
 defined('RUNTIME_PATH') or define('RUNTIME_PATH', APP_PATH.'runtime/');
 
-// 类文件扩展名
-const EXT = '.class.php';
+// 文件扩展名
+const EXT = '.php';
 
 // 包含配置文件
 require APP_PATH . 'config/config.php';
 
 // 包含核心框架类
-require ROOT . 'Core.php';
+require 'Core.php';
 
 // 实例化核心类
 $lens = new Lens;
 $lens->run();
-
