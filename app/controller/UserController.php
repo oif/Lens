@@ -8,22 +8,22 @@ class UserController extends Controller {
 
 	private function validator($name, $password, $avatar = null, $login = false) {
 		if (!preg_match('/^[A-Za-z\d]{3,10}$/i', $name)) {	// 用户名验证，查重
-			$this->pushErr(['stat' => 'User name validate failed']);
+			$this->pushRes(['stat' => 'User name validate failed']);
 			return false;
 		}
 
-		if (!$login && User::findOrFail($name)) {
-			$this->pushErr(['stat' => 'User name invalid']);
+		if (!$login && User::findOrFail($name)) {	// 用户名已存在
+			$this->pushRes(['stat' => 'User name invalid']);
 			return false;
 		}
 
 		if (!preg_match('/^[a-z\d]{6,18}$/i', $password)) {	// 密码验证
-			$this->pushErr(['stat' => 'Password validate Failed']);
+			$this->pushRes(['stat' => 'Password validate Failed']);
 			return false;
 		}
 
 		if (!is_null($avatar) && !preg_match('/^(http|https|ftp):\/\/([A-Z0-9][A-Z0-9_-]*(?:\.[A-Z0-9][A-Z0-9_-]*)+):?(\d+)?\/?/i', $avatar)) {	// 非法 URL
-			$this->pushErr(['stat' => 'Avatar validate Failed']);
+			$this->pushRes(['stat' => 'Avatar validate Failed']);
 			return false;
 		}
 		return true;
@@ -31,7 +31,7 @@ class UserController extends Controller {
 
 	private function tokenValidator($token) {
 		if (!preg_match('/^[A-Za-z\d]{128}$/i', $token)) {	// 用户名验证，查重
-			$this->pushErr(['stat' => 'Invalid token']);
+			$this->pushRes(['stat' => 'Invalid token']);
 			return false;
 		}
 		return true;
@@ -53,10 +53,10 @@ class UserController extends Controller {
 				$user->password = password_hash($_POST["password"], PASSWORD_BCRYPT);	// 使用 CRYPT_BLOWFISH 加密用户密码
 				$user->avatar = $_POST["avatar"];
 
-				$res = $user->add();
+				$res = $user->add();	// 添加
 
 				if ($res) {
-					$this->pushRes(['token' => $res->token, 'expire' => $res->expire]);
+					$this->pushRes(['token' => $res->token, 'expire' => $res->expire]);	// 注册成功
 				} else {
 					$this->pushRes(['stat' => 'Register fail']);
 				}
@@ -65,8 +65,8 @@ class UserController extends Controller {
 			$this->pushRes(['stat' => 'Register form are not completed']);
 			return $this->view('api');
 		}
-		$this->pushErr("Method not allow");
-		return $this->view('error');
+		$this->pushRes(['stat' => 'Method not allow']);	// 非 POST
+		return $this->view('api');
 	}
 
 	public function login() {
@@ -74,7 +74,7 @@ class UserController extends Controller {
 			// POST 数据验证
 			if (!empty($_POST["name"]) && !empty($_POST["password"])) {
 				if (!$this->validator($_POST["name"], $_POST["password"], null, true)) {
-					return $this->view('error');
+					return $this->view('api');
 				}
 				// 基础验证通过
 				$user = User::findOrFail($_POST["name"]);
@@ -90,8 +90,8 @@ class UserController extends Controller {
 			$this->pushRes(['stat' => 'Invalid args']);
 			return $this->view('api');
 		}
-		$this->pushErr("Method not allow");
-		return $this->view('error');
+		$this->pushRes(['stat' => 'Method not allow']);	// 非 POST
+		return $this->view('api');
 	}
 
 	public function info() {
@@ -107,18 +107,18 @@ class UserController extends Controller {
 					$this->pushRes(['stat' => 'Invalid token']);
 					return $this->view('api');
 				}
-				if ($user && $user->expire <= time()) {
+				if ($user && $user->expire <= time()) {	// token 过期
 					$this->pushRes(['stat' => 'Token expired']);
 					return $this->view('api');
 				}
-				$this->pushRes(['id' => $user->id, 'name' => $user->name, 'avatar' => $user->avatar]);
+				$this->pushRes(['id' => $user->id, 'name' => $user->name, 'avatar' => $user->avatar]);	// 返回用户信息
 				return $this->view('api');
 			}
 			$this->pushRes(['stat' => 'Invalid args']);
 			return $this->view('api');
 		}
-		$this->pushErr("Method not allow");
-		return $this->view('error');
+		$this->pushRes(['stat' => 'Method not allow']);	// 非 POST
+		return $this->view('api');
 	}
 
 }

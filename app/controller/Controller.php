@@ -21,6 +21,7 @@ class Controller {
         }
     }
 
+    // 返回视图
     protected function view($view) {
         $this->returnView = $view;
     }

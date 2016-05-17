@@ -13,15 +13,17 @@ class User extends Model {
 		return true;
 	}
 
+	// 生成随机码
 	private static function tokenGen($length = 128) {	// 默认128位
 		$seed = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 		$code = '';
 	    for ($i=0; $i < $length; $i++) {
-	        $code .= $seed[mt_rand(0, 61)];//substr($seed, mt_rand(0, 61), 1);
+	        $code .= $seed[mt_rand(0, 61)];
 	    }
 	    return $code;
 	}
 
+	// 添加用户
 	public function add() {
 		$this->token = User::tokenGen();
 		$this->expire = time() + TOKEN_EXP;
@@ -58,26 +60,22 @@ class User extends Model {
         }
         $found = new User;
         $found->id = $user['id'];
-        /*
-        $found->name = $user['name'];
-        $found->password = $user['password'];
-        $found->avatar = $user['avatar'];
-        $found->token = $user['token'];
-        $found->expire = $user['expire'];*/
         foreach ($found->key as $k) {
         	$found->$k = $user[$k];
         }
         return $found;
 	}
 
-	public function update($key) {	// 更新
-		if (is_null($this->id) || is_null($this->$key)) {
+	// 更新
+	public function update($key) {
+		if (is_null($this->id) || is_null($this->$key)) {	// 验证
 			return false;
 		}
 		$query = 'update `'.$this->table.'` set '. $key .' = \''. $this->$key.'\' where `id` = \''. $this->id .'\'';
         return $this->query($query);
 	}
 
+	// 更新 Token 以及过期时间
 	public function updateToken() {
 		$this->token = User::tokenGen();
 		$this->expire = time() + TOKEN_EXP;
