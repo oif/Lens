@@ -44,7 +44,7 @@ class Lens {
         if ((int)method_exists($controller, $action)) {
             call_user_func_array(array($int, $action), $queryString);
         } else {
-            exit($controller . "控制器不存在");
+            exit("不存在 $controller");
         }
     }
 

@@ -16,6 +16,7 @@ require APP_PATH . 'config/config.php';
 // 包含核心框架类
 require 'Core.php';
 
-// 实例化核心类
+// 实例化核心
 $lens = new Lens;
 $lens->run();
+

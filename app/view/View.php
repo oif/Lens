@@ -1,7 +1,6 @@
 <?php
 
 class View {
-
     protected $properties = array();
 
     public function __get($property) {
@@ -14,8 +13,9 @@ class View {
         $this->properties[$property] = $value;
     }
 
-    function render() {
-        include (APP_PATH . 'app/views/api.php');
+    function render($view) { // 输出
+        include (APP_PATH . "app/views/$api.php");  // 自定义视图
     }
 
 }
+

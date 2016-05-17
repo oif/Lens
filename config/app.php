@@ -12,3 +12,4 @@ define('DB_HOST', 'localhost');
 define('DB_NAME', 'meituDB');
 define('DB_USER', 'neo');
 define('DB_PASSWORD', 'root');
+

@@ -21,4 +21,6 @@ class Model extends SQL {
         // 根据类名获得表名，命名规则例如 User 则表名为 users
         $this->table = strtolower(get_class($this).'s');
 	}
+
 }
+
