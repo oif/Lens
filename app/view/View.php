@@ -13,8 +13,9 @@ class View {
         $this->properties[$property] = $value;
     }
 
-    function render($view) { // 输出
-        include (APP_PATH . "app/views/$api.php");  // 自定义视图
+    function render($view = 'api') { // 输出
+        extract($this->properties);
+        include (APP_PATH . "app/view/$view.php");  // 自定义视图
     }
 
 }

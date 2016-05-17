@@ -15,9 +15,8 @@ class Lens {
 
     // 主请求方法，主要目的是拆分URL请求
     function callHook() {
-
-        if (!empty($_GET['url'])){
-            $url = $_GET['url'];
+        if (!empty($_SERVER['REQUEST_URI'])){
+            $url = $_SERVER['REQUEST_URI'];
             $urlArray = explode("/",$url);
 
             // 获取控制器名
@@ -49,16 +48,16 @@ class Lens {
     }
 
 
-    // 检测开发环境
+    // 设置 DEBUG 模式
     function setReporting() {
         if (APP_DEBUG == true) {
-            error_reporting(E_ALL);
+            error_reporting(E_ALL); // 所有报错信息
             ini_set('display_errors','On');
         } else {
             error_reporting(E_ALL);
-            ini_set('display_errors','Off');
-            ini_set('log_errors', 'On');
-            ini_set('error_log', RUNTIME_PATH. 'logs/error.log');
+            ini_set('display_errors','Off');    // 不报错
+            ini_set('log_errors', 'On');    // 输出日志
+            ini_set('error_log', RUNTIME_PATH. 'logs/error.log');   // 日志输出位置
         }
     }
 
@@ -71,8 +70,8 @@ class Lens {
     // 检测敏感字符并删除
     function removeMagicQuotes() {
         if ( get_magic_quotes_gpc() ) {
-            $_GET = stripSlashesDeep($_GET );
-            $_POST = stripSlashesDeep($_POST );
+            $_GET = stripSlashesDeep($_GET);
+            $_POST = stripSlashesDeep($_POST);
             $_COOKIE = stripSlashesDeep($_COOKIE);
             $_SESSION = stripSlashesDeep($_SESSION);
         }
@@ -82,7 +81,7 @@ class Lens {
     function unregisterGlobals() {
         if (ini_get('register_globals')) {
             $array = array('_SESSION', '_POST', '_GET', '_COOKIE', '_REQUEST', '_SERVER', '_ENV', '_FILES');
-           foreach ($array as $value) {
+            foreach ($array as $value) {
                 foreach ($GLOBALS[$value] as $key => $var) {
                     if ($var === $GLOBALS[$key]) {
                         unset($GLOBALS[$key]);
@@ -97,19 +96,20 @@ class Lens {
         $frameworks = ROOT . $class . EXT;
         $controllers = APP_PATH . 'app/controller/' . $class . EXT;
         $models = APP_PATH . 'app/model/' . $class . EXT;
+        $view = APP_PATH . 'app/view/View.php';
 
         if (file_exists($frameworks)) {
-            // 加载框架核心类
-            include $frameworks;
+            include $frameworks;    // 加载框架核心类
         } elseif (file_exists($controllers)) {
-            // 加载应用控制器类
-            include $controllers;
+            include $controllers;   // 加载应用控制器类
         } elseif (file_exists($models)) {
-            //加载应用模型类
-            include $models;
+            include $models;    // 加载应用模型类
+        } elseif (file_exists($view)) {
+            include $view;  // 加载基础视图类
         } else {
             /* 错误代码 */
         }
     }
 
 }
+

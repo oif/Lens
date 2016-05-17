@@ -10,9 +10,6 @@ defined('RUNTIME_PATH') or define('RUNTIME_PATH', APP_PATH.'runtime/');
 // 文件扩展名
 const EXT = '.php';
 
-// 包含配置文件
-require APP_PATH . 'config/config.php';
-
 // 包含核心框架类
 require 'Core.php';
 
