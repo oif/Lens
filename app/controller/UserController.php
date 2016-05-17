@@ -17,7 +17,7 @@ class UserController extends Controller {
 			return false;
 		}
 
-		if (!preg_match('/^[a-z\d]{6,18}$/i', $password)) {	// 密码验证
+		if (!preg_match('/^[A-Za-z\d]{6,18}$/i', $password)) {	// 密码验证
 			$this->pushRes(['stat' => 'Password validate Failed']);
 			return false;
 		}
@@ -42,7 +42,7 @@ class UserController extends Controller {
 			// POST 数据验证
 			if (!empty($_POST["name"]) && !empty($_POST["password"]) && !empty($_POST["avatar"])) {
 				if (!$this->validator($_POST["name"], $_POST["password"], $_POST["avatar"])) {
-					return $this->view('error');
+					return $this->view('api');
 				}
 
 				// 验证通过
@@ -99,7 +99,7 @@ class UserController extends Controller {
 			// POST 数据验证
 			if (!empty($_POST["token"])) {
 				if (!$this->tokenValidator($_POST["token"])) {
-					return $this->view('error');
+					return $this->view('api');
 				}
 				// 基础验证通过
 				$user = User::findOrFail($_POST["token"], true);	// 通过 token 查找用户
