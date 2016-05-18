@@ -22,5 +22,9 @@ class Model extends SQL {
         $this->table = strtolower(get_class($this).'s');
 	}
 
+	function __destruct() {
+		$this->disconnect();	// 释放数据库
+	}
+
 }
 
