@@ -50,9 +50,8 @@ class Lens {
 
     function setRoutes() {
         $this->route = new Route;
-        $this->route->set('/user/register', 'UserController@register');
-        $this->route->set('/user/login', 'UserController@login');
-        $this->route->set('/user/info', 'UserController@info');
+        // $this->route->set('/user/register', 'UserController@register');
+        // $this->route->set('/user/login', 'UserController@login');
     }
 
 
