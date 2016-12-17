@@ -1,7 +1,7 @@
 <?php
 
 class Controller {
-    protected $view;    // 视图实力化
+    protected $view;    // 视图实例化
     protected $returnView;  // 自定义视图
 
     function __construct() {
@@ -17,7 +17,8 @@ class Controller {
         $field = preg_match('/^push(\w+)/', $name, $matches);
         if ($field && $matches[1]) {
             $matches[1] = lcfirst($matches[1]); // 调整命名规则（驼峰）
-            return $this->view->$matches[1] = $args[0];
+            $prop = $matches[1];
+            return $this->view->$prop = $args[0];
         }
     }
 
